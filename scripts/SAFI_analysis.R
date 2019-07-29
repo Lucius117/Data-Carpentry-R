@@ -99,3 +99,74 @@ str(dates)
 interviews$day <- day(dates)
 interviews$month <- month(dates)
 interviews$year <- year(dates)
+
+
+interviews <- read_csv('data/SAFI_clean.csv',na='NULL')
+
+select(interviews,village,no_membrs,years_liv)
+filter(interviews,village=='God')
+
+interviews2 <- filter(interviews,village=='God')
+interviews_god <- select(interviews2,no_membrs,years_liv)
+
+interviews_god <- filter(interviews,village=='God')
+interviews_god <- select(interviews_god,no_membrs,years_liv)
+
+interviews_god <- select(
+  filter(interviews,village=='God'),
+  no_membrs,
+  years_liv
+)
+
+interviews_god <- interviews %>% 
+  filter(village=='God') %>% 
+  select(no_membrs,years_liv)
+
+interviews_memb_assoc <- interviews %>% 
+  filter(memb_assoc=='yes') %>% 
+  select(affect_conflicts,liv_count,no_meals)
+
+interviews %>% 
+  mutate(people_per_room=no_membrs/rooms)
+
+interviews %>% 
+  filter(!is.na(memb_assoc)) %>% 
+  mutate(people_per_room)
+
+interviews_total_meals <- interviews %>% 
+  mutate(total_meals=no_membrs*no_membrs) %>% 
+  filter(total_meals>20) %>% 
+  select(village,total_meals)
+
+interviews %>% 
+  group_by(village) %>% 
+  summarize(mean_no_membrs=mean(no_membrs))
+
+interviews %>% 
+  filter(!is.na(memb_assoc)) %>% 
+  group_by(village,memb_assoc) %>% 
+  summarize(mean_no_membrs=mean(no_membrs),
+            min_membrs=min(no_membrs)) %>% 
+  arrange(desc(min_membrs))
+
+interviews %>% 
+  count(village,sort=TRUE)
+
+interviews %>% 
+  count(no_meals)
+
+interviews %>% 
+  group_by(village) %>% 
+  summarise(
+    mean_no_membrs=mean(no_membrs),
+    min_no_membrs=min(no_membrs),
+    max_no_membrs=max(no_membrs),
+    n=n()
+  )
+
+interviews %>% 
+  mutate(month=month(interview_date),
+         day=day(interview_date),
+         year=year(interview_date)) %>% 
+  group_by(year,month) %>% 
+  summarize(max_no_membrs=max(no_membrs))

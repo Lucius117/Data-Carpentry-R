@@ -1,0 +1,91 @@
+---
+title: "My First R Markdown"
+author: "Xiaochi"
+date: "29/07/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(include=TRUE,
+                      echo = TRUE,
+                      message = TRUE,
+                      warning = TRUE
+                      )
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+This is a paragraph in an R Markdown documnet.
+
+Below is a code chunk:
+
+```{r}
+fit=lm(dist~speed,data=cars)
+b=coef(fit)
+plot(cars)
+abline(fit)
+```
+
+The slope of the regression is `r b[2]`.
+
+
+
+
+You can write code in languages other than R with R Markdown, e.g.
+
+## Bash
+
+```{bash}
+ls *.Rmd
+```
+
+## Python
+
+```{python}
+x="hello, python world!"
+print(x.split(" "))
+```
+
+```{r}
+library(knitr)
+kable(mtcars[1:5,],caption="A knitr kable.")
+```
+
+Markdown provides an easy way to make standard types of formatted text, like
+
+
+- *italic*
+- **bold**
+- `code`
+- [links](rmarkdown.rstudio.com)
+- etc.
+
+But did you know that you can also use R Markdown's markdown to make
+
+- Latex equations, $E=mc^{2}$
+- And bibliographies [@rmarkdown15].
+
+# Reference
+
+
+
+
+
