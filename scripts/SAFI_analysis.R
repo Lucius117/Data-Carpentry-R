@@ -170,3 +170,76 @@ interviews %>%
          year=year(interview_date)) %>% 
   group_by(year,month) %>% 
   summarize(max_no_membrs=max(no_membrs))
+
+interviews_spread <- interviews %>% 
+  mutate(wall_type_logical=TRUE) %>% 
+  spread(key=respondent_wall_type,
+         value=wall_type_logical,
+         fill=FALSE)
+
+interviews_gather <- interviews_spread %>% 
+  gather(key=respondent_wall_type,
+         value='wall_type_logical',
+         burntbricks:sunbricks) %>% 
+  filter(wall_type_logical) %>% 
+  select(-wall_type_logical)
+
+interviews_items_owned <- interviews %>% 
+  mutate(split_items=strsplit(items_owned,';')) %>% 
+  unnest() %>% 
+  mutate(items_owned_logical=TRUE) %>% 
+  spread(key=split_items,
+         value=items_owned_logical,
+         fill=FALSE) %>% 
+  rename(no_listed_items='<NA>')
+
+interviews_items_owned %>% 
+  filter(bicycle) %>% 
+  group_by(village) %>% 
+  count(bicycle)
+
+interviews_average_items <- interviews_items_owned %>% 
+  mutate(number_items=rowSums(select(.,bicycle:television))) %>% 
+  group_by(village) %>% 
+  summarize(mean_items=mean(number_items))
+
+interviews_month_no_food <- interviews %>% 
+  mutate(split_month=strsplit(months_lack_food,";")) %>% 
+  unnest() %>% 
+  mutate(months_lack_food_logical=TRUE) %>% 
+  spread(key=split_month,
+         value=months_lack_food_logical,
+         fill=FALSE)
+
+test <- interviews_month_no_food %>% 
+  mutate(number_months=rowSums(select(.,Apr:Sept))) %>% 
+  group_by(memb_assoc) %>% 
+  summarize(mean_month=mean(number_months))
+
+interviews_plotting <- interviews %>% 
+  # spread data by items_owned
+  mutate(split_items=strsplit(items_owned,';')) %>% 
+  unnest() %>% 
+  mutate(items_owned_logical=TRUE) %>% 
+  spread(key=split_items,
+         value=items_owned_logical,
+         fill=FALSE) %>% 
+  rename(no_listed_items='<NA>') %>% 
+  # spread data by months_lack_food
+  mutate(split_months=strsplit(months_lack_food,';')) %>% 
+  unnest() %>% 
+  mutate(months_lack_food_logical=TRUE) %>% 
+  spread(key=split_months,
+         value=months_lack_food_logical,
+         fill=FALSE) %>% 
+  # add some summry columns
+  mutate(number_months_lack_food=rowSums(select(.,Apr:Sept))) %>% 
+  mutate(number_items=rowSums(select(.,bicycle:television)))
+
+write_csv(interviews_plotting,
+          path='data_output/interviews_plotting.csv')
+  
+
+  
+  
+
